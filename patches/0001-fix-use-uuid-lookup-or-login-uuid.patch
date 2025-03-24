@@ -1,0 +1,55 @@
+From 89e4ba12ca2d555594735c60d7b36fe336369769 Mon Sep 17 00:00:00 2001
+From: MEFRREEX <mefrreex@gmail.com>
+Date: Mon, 24 Mar 2025 04:34:58 +0400
+Subject: [PATCH] fix: use uuid lookup or login uuid
+
+---
+ src/main/java/cn/nukkit/Player.java             | 8 ++++++--
+ src/main/java/cn/nukkit/entity/EntityHuman.java | 5 +++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/java/cn/nukkit/Player.java b/src/main/java/cn/nukkit/Player.java
+index 188ca480..7d9c57c0 100644
+--- a/src/main/java/cn/nukkit/Player.java
++++ b/src/main/java/cn/nukkit/Player.java
+@@ -3129,8 +3129,12 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
+ 
+                 this.randomClientId = loginPacket.clientId;
+ 
+-                this.uuid = loginPacket.clientUUID;
+-                this.rawUUID = Binary.writeUUID(this.uuid);
++                UUID loginUuid = loginPacket.clientUUID;
++                UUID lookupUuid = server.lookupName(username).orElse(loginUuid);
++
++                this.loginUuid = loginUuid;
++                this.uuid = lookupUuid;
++                this.rawUUID = Binary.writeUUID(lookupUuid);
+ 
+                 boolean valid = true;
+                 int len = loginPacket.username.length();
+diff --git a/src/main/java/cn/nukkit/entity/EntityHuman.java b/src/main/java/cn/nukkit/entity/EntityHuman.java
+index 964c4302..61961e3a 100644
+--- a/src/main/java/cn/nukkit/entity/EntityHuman.java
++++ b/src/main/java/cn/nukkit/entity/EntityHuman.java
+@@ -34,6 +34,7 @@ public class EntityHuman extends EntityHumanType {
+     public static final int DATA_PLAYER_FLAGS = 26;
+     public static final int DATA_PLAYER_BUTTON_TEXT = 40;
+ 
++    protected UUID loginUuid;
+     protected UUID uuid;
+     protected byte[] rawUUID;
+ 
+@@ -98,6 +99,10 @@ public class EntityHuman extends EntityHumanType {
+         return skin;
+     }
+ 
++    public UUID getLoginUuid() {
++        return loginUuid;
++    }
++
+     @Override
+     public UUID getUniqueId() {
+         return uuid;
+-- 
+2.48.1.windows.1
+
