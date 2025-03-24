@@ -1,5 +1,7 @@
 # Nukkit-MOT UUID Patch
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 If your plugins store data by UUID, a player playing without an Xbox may lose their data because their UUID may change when reinstalling the game, changing devices, or other reasons.
 
 This project was created to fix changing the player's UUID when logging in without an Xbox account.
