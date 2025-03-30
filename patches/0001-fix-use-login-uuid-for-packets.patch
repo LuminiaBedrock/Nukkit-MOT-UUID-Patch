@@ -98,7 +98,7 @@ index 61961e3a..31ebaaf6 100644
  
              AddPlayerPacket pk = new AddPlayerPacket();
 -            pk.uuid = this.uuid;
-+            pk.uuid = this.loginUuid;
++            pk.uuid = this.isPlayer ? this.loginUuid : this.uuid;
              pk.username = this.getName();
              pk.entityUniqueId = this.getId();
              pk.entityRuntimeId = this.getId();
