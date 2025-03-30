@@ -19,7 +19,7 @@ tasks.register("applyPatches") {
         patchesDir.listFiles { file -> file.extension == "patch" }?.forEach { patch ->
             println("Applying patch: ${patch.name}")
 
-            val process = ProcessBuilder("git", "apply", "--directory=Nukkit-MOT", patch.absolutePath)
+            val process = ProcessBuilder("git", "apply", "--ignore-whitespace", "--reject", "--directory=Nukkit-MOT", patch.absolutePath)
                 .directory(rootDir)
                 .redirectErrorStream(true)
                 .start()

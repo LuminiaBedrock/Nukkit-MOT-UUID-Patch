@@ -26,7 +26,7 @@ git clone https://github.com/MemoriesOfTime/Nukkit-MOT.git
 ```
 4. Apply the patches using the command:
 ```bash
-./gradlew applyChanges
+./gradlew applyPatches
 ```
 **Now you can build the Nukkit-MOT and it will be ready for use!**
 
