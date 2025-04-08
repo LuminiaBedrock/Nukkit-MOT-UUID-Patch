@@ -1,6 +1,6 @@
-From 1b74533fb2042d04ae80da8ef4e26a3601466105 Mon Sep 17 00:00:00 2001
+From 8685910b0be7976c66f6e5f53b74078ef3335afc Mon Sep 17 00:00:00 2001
 From: MEFRREEX <mefrreex@gmail.com>
-Date: Mon, 24 Mar 2025 04:42:36 +0400
+Date: Tue, 8 Apr 2025 23:36:11 +0400
 Subject: [PATCH] fix: use login uuid for packets
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH] fix: use login uuid for packets
  3 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/src/main/java/cn/nukkit/Player.java b/src/main/java/cn/nukkit/Player.java
-index 7d9c57c0..672ef247 100644
+index 9bfcd60e..c177f70c 100644
 --- a/src/main/java/cn/nukkit/Player.java
 +++ b/src/main/java/cn/nukkit/Player.java
-@@ -854,7 +854,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
+@@ -873,7 +873,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
      public void setDisplayName(String displayName) {
          this.displayName = displayName;
          if (this.spawned) {
@@ -22,7 +22,7 @@ index 7d9c57c0..672ef247 100644
          }
      }
  
-@@ -862,7 +862,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
+@@ -881,7 +881,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
      public void setSkin(Skin skin) {
          super.setSkin(skin);
          if (this.spawned) {
@@ -31,7 +31,7 @@ index 7d9c57c0..672ef247 100644
          }
      }
  
-@@ -5063,7 +5063,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
+@@ -5120,7 +5120,7 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
          if (this.level.getGameRules().getBoolean(GameRule.SEND_COMMAND_FEEDBACK)) {
              var pk = new CommandOutputPacket();
              pk.messages.addAll(container.getMessages());
@@ -41,10 +41,10 @@ index 7d9c57c0..672ef247 100644
              pk.successCount = container.getSuccessCount();//Useless,maybe used for server-client interaction
              this.dataPacket(pk);
 diff --git a/src/main/java/cn/nukkit/Server.java b/src/main/java/cn/nukkit/Server.java
-index f863445a..f4fd1fef 100644
+index 07226f73..7edf5728 100644
 --- a/src/main/java/cn/nukkit/Server.java
 +++ b/src/main/java/cn/nukkit/Server.java
-@@ -1239,7 +1239,7 @@ public class Server {
+@@ -1255,7 +1255,7 @@ public class Server {
  
      public void onPlayerCompleteLoginSequence(Player player) {
          this.playerList.put(player.getUniqueId(), player);
@@ -53,7 +53,7 @@ index f863445a..f4fd1fef 100644
      }
  
      public void addPlayer(InetSocketAddress socketAddress, Player player) {
-@@ -1248,7 +1248,7 @@ public class Server {
+@@ -1264,7 +1264,7 @@ public class Server {
  
      public void addOnlinePlayer(Player player) {
          this.playerList.put(player.getUniqueId(), player);
@@ -62,7 +62,7 @@ index f863445a..f4fd1fef 100644
      }
  
      public void removeOnlinePlayer(Player player) {
-@@ -1260,7 +1260,7 @@ public class Server {
+@@ -1276,7 +1276,7 @@ public class Server {
  
              PlayerListPacket pk = new PlayerListPacket();
              pk.type = PlayerListPacket.TYPE_REMOVE;
@@ -71,7 +71,7 @@ index f863445a..f4fd1fef 100644
  
              Server.broadcastPacket(this.playerList.values(), pk);
          }
-@@ -1316,7 +1316,7 @@ public class Server {
+@@ -1332,7 +1332,7 @@ public class Server {
      public void sendFullPlayerListData(Player player) {
          PlayerListPacket.Entry[] array = this.playerList.values().stream()
                  .map(p -> new PlayerListPacket.Entry(
@@ -81,7 +81,7 @@ index f863445a..f4fd1fef 100644
                          p.getDisplayName(),
                          p.getSkin(),
 diff --git a/src/main/java/cn/nukkit/entity/EntityHuman.java b/src/main/java/cn/nukkit/entity/EntityHuman.java
-index 61961e3a..31ebaaf6 100644
+index 61961e3a..ca003e15 100644
 --- a/src/main/java/cn/nukkit/entity/EntityHuman.java
 +++ b/src/main/java/cn/nukkit/entity/EntityHuman.java
 @@ -326,7 +326,7 @@ public class EntityHuman extends EntityHumanType {

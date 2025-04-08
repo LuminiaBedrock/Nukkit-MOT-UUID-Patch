@@ -1,25 +1,27 @@
-From 89e4ba12ca2d555594735c60d7b36fe336369769 Mon Sep 17 00:00:00 2001
+From 63fdeeacd95859abc18fea3cc9e16206d71c991f Mon Sep 17 00:00:00 2001
 From: MEFRREEX <mefrreex@gmail.com>
-Date: Mon, 24 Mar 2025 04:34:58 +0400
+Date: Tue, 8 Apr 2025 23:33:20 +0400
 Subject: [PATCH] fix: use uuid lookup or login uuid
 
 ---
- src/main/java/cn/nukkit/Player.java             | 8 ++++++--
- src/main/java/cn/nukkit/entity/EntityHuman.java | 5 +++++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ src/main/java/cn/nukkit/Player.java             | 10 ++++++++--
+ src/main/java/cn/nukkit/entity/EntityHuman.java |  5 +++++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/cn/nukkit/Player.java b/src/main/java/cn/nukkit/Player.java
-index 188ca480..7d9c57c0 100644
+index ea32bb12..9bfcd60e 100644
 --- a/src/main/java/cn/nukkit/Player.java
 +++ b/src/main/java/cn/nukkit/Player.java
-@@ -3129,8 +3129,12 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
+@@ -3180,8 +3180,14 @@ public class Player extends EntityHuman implements CommandSender, InventoryHolde
  
                  this.randomClientId = loginPacket.clientId;
  
 -                this.uuid = loginPacket.clientUUID;
 -                this.rawUUID = Binary.writeUUID(this.uuid);
 +                UUID loginUuid = loginPacket.clientUUID;
-+                UUID lookupUuid = server.lookupName(username).orElse(loginUuid);
++                UUID lookupUuid = server.lookupName(username).orElse(loginChainData.isXboxAuthed()
++                        ? loginUuid
++                        : UUID.nameUUIDFromBytes(username.getBytes()));
 +
 +                this.loginUuid = loginUuid;
 +                this.uuid = lookupUuid;
